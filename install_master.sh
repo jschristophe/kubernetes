@@ -1,5 +1,12 @@
 : <<'END_COMMENT'
+END_COMMENT
 
+################# INSTAL DOCKER #################
+sudo su
+apt-get update 
+apt-get install -y docker.io
+
+################# Install kubeadm, Kubelet And Kubectl #################
 sudo apt-get update
 
 
@@ -34,9 +41,9 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ##### CREATE NETWORK #####
 sudo kubectl apply -n kube-system -f  "https://cloud.weave.works/k8s/net?k8s-version=$(sudo kubectl version | base64 | tr -d '\n')"
 
-END_COMMENT
 
-######HELM
+
+##### HELM ##### 
 
 
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
