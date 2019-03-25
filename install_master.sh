@@ -1,3 +1,5 @@
+: <<'END_COMMENT'
+
 sudo apt-get update
 
 
@@ -31,3 +33,19 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 ##### CREATE NETWORK #####
 sudo kubectl apply -n kube-system -f  "https://cloud.weave.works/k8s/net?k8s-version=$(sudo kubectl version | base64 | tr -d '\n')"
+
+END_COMMENT
+
+######HELM
+
+##sudo snap install helm --classic
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+
+kubectl create serviceaccount tiller --namespace kube-system
+
+kubectl create clusterrolebinding tiller-cluster-rule \
+ clusterrole=cluster-admin \
+ serviceaccount=kube-system:tiller
+
+helm init --history-max 200 --service-account=tiller
+
