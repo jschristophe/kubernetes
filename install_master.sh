@@ -33,9 +33,17 @@ sudo kubeadm init
 
 #############CONFIG####################
 
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+#mkdir -p $HOME/.kube
+
+#sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+#sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+sudo cp /etc/kubernetes/admin.conf $HOME/
+
+sudo chown $(id -u):$(id -g) $HOME/admin.conf
+
+export KUBECONFIG=$HOME/admin.conf
 
 
 ##### CREATE NETWORK #####
@@ -50,18 +58,22 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
 
 helm init --history-max 200
 
-helm repo add coreos https://s3-eu-west-1.amazonaws.com/coreos-charts/stable/
+
 
 kubectl create serviceaccount --namespace kube-system tiller
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}' 
 
+sleep 10s
 
 #allow master to run pods:
-#kubectl taint nodes --all node-role.kubernetes.io/master-
+kubectl taint nodes --all node-role.kubernetes.io/master-
 
+sleep 15s
 
-#helm install coreos/prometheus-operator --name prometheus-operator --namespace monitoring
+helm init --history-max 200
+helm repo add coreos https://s3-eu-west-1.amazonaws.com/coreos-charts/stable/
+helm install coreos/prometheus-operator --name prometheus-operator --namespace monitoring
 
 
 
