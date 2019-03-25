@@ -38,14 +38,23 @@ END_COMMENT
 
 ######HELM
 
-##sudo snap install helm --classic
+
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
 
-kubectl create serviceaccount tiller --namespace kube-system
+helm init --history-max 200
 
-kubectl create clusterrolebinding tiller-cluster-rule \
- clusterrole=cluster-admin \
- serviceaccount=kube-system:tiller
+helm repo add coreos https://s3-eu-west-1.amazonaws.com/coreos-charts/stable/
 
-helm init --history-max 200 --service-account=tiller
+kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}' 
+
+
+#allow master to run pods:
+#kubectl taint nodes --all node-role.kubernetes.io/master-
+
+
+#helm install coreos/prometheus-operator --name prometheus-operator --namespace monitoring
+
+
 
