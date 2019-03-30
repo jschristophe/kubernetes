@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  appcartwebapp:
+    image: ${DOCKER_REGISTRY-}appcartwebapp
+    environment:
+      - FrontApiUrl=http://appcartfrontapi/      
+    build:
+      context: .
+      dockerfile: AppCartWebApp\Dockerfile
+
+  appcart_frontapi:
+    image: ${DOCKER_REGISTRY-}appcartfrontapi
+    build:
+      context: .
+      dockerfile: AppCart_FrontApi\Dockerfile
+

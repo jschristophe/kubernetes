@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  appcartwebapp:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
+  appcart_frontapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 54411:80
+
+networks:
+  default:
+    external:
+      name: nat
+
